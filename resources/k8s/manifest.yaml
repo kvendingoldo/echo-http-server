@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: httpserver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpserver
+  labels:
+    app: httpserver
+    service: httpserver
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: httpserver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpserver
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpserver
+        version: v1
+    spec:
+      serviceAccountName: httpserver
+      containers:
+        - image: docker.io/kvendingoldo/echo-http-server:1.0
+          imagePullPolicy: IfNotPresent
+          name: httpserver
+          ports:
+            - containerPort: 8080

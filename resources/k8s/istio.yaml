@@ -1,0 +1,16 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpserver
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - <GATEWAY>
+  http:
+    - route:
+        - destination:
+            host: httpserver
+            port:
+              number: 80
